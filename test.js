@@ -37,14 +37,22 @@ test('.emit() should match partials', function (t) {
 })
 
 test('.emit() should allow nesting', function (t) {
-  t.plan(1)
+  t.plan(2)
   const r1 = wayfarer()
   const r2 = wayfarer()
   r1.on('/home', r2)
-  r2.on('/home', function (uri) {
-    t.equal(uri, '/home')
+  r2.on('/', function (uri) {
+    t.equal(uri, '/')
   })
   r1('/home')
+
+  const r3 = wayfarer()
+  const r4 = wayfarer()
+  r3.on('/parent', r4)
+  r4.on('/child', function (uri) {
+    t.equal(uri, '/child')
+  })
+  r3('/parent/child')
 })
 
 test('aliases', function (t) {
